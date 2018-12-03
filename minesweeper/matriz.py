@@ -1,4 +1,4 @@
-import random
+import random, os
 
 WIDTH = 400
 HEIGHT = 400
@@ -7,7 +7,7 @@ HEIGHT = 400
 m = [[0 for i in range(0, WIDTH, 20)] for j in range(0, HEIGHT, 20)]
 
 def main():
-    MINAS = 1
+    MINAS = 4
     count_minas = 0
     minas = []
 
@@ -25,13 +25,11 @@ def main():
 def calcular_numeros(coord):
     i = coord[0]
     j = coord[1]
-    dir_i = [-1, -1, -1, 0, 1, 1, 1, 0]
-    dir_j = [-1, 0, 1, 1, -1, 0, -1, -1]
-    for k in range(len(dir_i)):
-        ii = i + dir_i[k]
-        jj = j + dir_j[k]
-        if(ok(ii, jj)):
-            print(ii, jj)
+    dir = [[-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1]]
+    for dir_i, dir_j in dir:
+        ii = i + dir_i
+        jj = j + dir_j
+        if(ok(ii, jj) and m[ii][jj] != -1):
             m[ii][jj] += 1
         
 
