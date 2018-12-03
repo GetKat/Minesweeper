@@ -120,9 +120,9 @@ class Field(pg.sprite.Sprite):
         if(self.hiden == 0): # default state
             self.image = pg.image.load(path + "\\icons\\field_3D_filled.png")
         elif(self.hiden == 1): # flag state
-            self.image = pg.image.load(path + "\\icons\\flag_field.png")
+            self.image = pg.image.load(path + "\\icons\\flag_field_filled.png")
         elif(self.hiden == 2): # question_mark state
-            self.image = pg.image.load(path + "\\icons\\question_field.png")
+            self.image = pg.image.load(path + "\\icons\\question_field_filled.png")
 
     # when field is left-clicked
     def toggle_hiden(self):
