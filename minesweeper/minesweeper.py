@@ -1,4 +1,4 @@
-import pygame as pg, sys
+import pygame as pg, sys, os
 
 black = [0, 0, 0]
 white = [255, 255, 255]
@@ -24,13 +24,16 @@ MOUSE_RIGHT = 3
 clock = pg.time.Clock()
 sprites = pg.sprite.Group() 
 
+path = os.path.dirname(os.path.abspath(__file__))
+
 def main():
     pg.init()
     pg.display.init()
 
     screen = pg.display.set_mode([HEIGHT, WIDTH])
     pg.display.set_caption("Campo Minado")
-    pg.display.set_icon(pg.image.load("C:/Users/Carlyle/Desktop/pygame/minesweeper/icon.png"))
+    # icone da janela
+    pg.display.set_icon(pg.image.load(path + "\\icons\\icon.png"))
     screen.fill(gray)
 
     fields = [[Field(x * 20, y * 20) for y in range(20)] for x in range(20)]
@@ -69,7 +72,8 @@ def main():
 class Field(pg.sprite.Sprite):
     def __init__(self, x = 0, y = 0):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.image.load("C:/Users/Carlyle/Desktop/pygame/minesweeper/field_3D_filled.png")
+        # imagem inicial de qualquer campo
+        self.image = pg.image.load(path + "\\icons\\field_3D_filled.png")
         self.rect = self.image.get_rect()
         """
         self.rect.centerx = WIDTH/2
@@ -78,7 +82,13 @@ class Field(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.color = 0
-        # hiden state: 0 - regular, 1 - flag, 2 - ?, -1 - revealed
+        # hiden state:
+        # -1 - revealed
+        # 0 - default
+        # 1 - flag
+        # 2 - ?
+
+        # original state is default
         self.hiden = 0
     
     def change_color(self):
@@ -99,21 +109,29 @@ class Field(pg.sprite.Sprite):
         return self.hiden != -1
 
     def toggle_right(self):
-        if(self.hiden != -1):
-            self.hiden += 1
-            if(self.hiden > 2):
-                self.hiden = 0
-            
-            if(self.hiden == 0):
-                self.image = pg.image.load("C:/Users/Carlyle/Desktop/pygame/minesweeper/field_3D_filled.png")
-            elif(self.hiden == 1):
-                self.image = pg.image.load("C:/Users/Carlyle/Desktop/pygame/minesweeper/flag_field.png")
-            elif(self.hiden == 2):
-                self.image = pg.image.load("C:/Users/Carlyle/Desktop/pygame/minesweeper/question_field.png")
+        # can only change right_click state if not revealed
+        if(self.hiden == -1):
+            return
+        
+        # increment the state so it can loop throgh
+        #  default(0) -> flag(1) -> question(2) -> default(0) -> ...
+        self.hiden = (self.hiden + 1) % 3
+        
+        if(self.hiden == 0): # default state
+            self.image = pg.image.load(path + "\\icons\\field_3D_filled.png")
+        elif(self.hiden == 1): # flag state
+            self.image = pg.image.load(path + "\\icons\\flag_field.png")
+        elif(self.hiden == 2): # question_mark state
+            self.image = pg.image.load(path + "\\icons\\question_field.png")
 
+    # when field is left-clicked
     def toggle_hiden(self):
-        if(self.hiden == 0):
-            self.hiden = -1
-            self.image = pg.image.load("C:/Users/Carlyle/Desktop/pygame/minesweeper/field_1p.png")
+        # cannot change state if its already clicked
+        if(self.hiden != 0): # state 0 == deafult state (hiden)
+            return
+
+        # field now is clicked
+        self.hiden = -1
+        self.image = pg.image.load(path + "\\icons\\field_1p.png")
 
 if(__name__ == '__main__'): main()
