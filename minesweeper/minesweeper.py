@@ -103,5 +103,5 @@ def gerar_numeros(grid):
                     if(ok(ii, jj) and grid[ii][jj].number != -1): # se estiver na matriz e n for uma bomba (n incrementa o numero da bomba)
                         grid[ii][jj].number += 1
 
-
+        
 if(__name__ == '__main__'): main()

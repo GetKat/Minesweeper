@@ -23,6 +23,8 @@ def main():
     print_m(m)
 
 def calcular_numeros(coord):
+    def ok(i, j):
+        return i >= 0 and j >= 0 and i < WIDTH / 20 and j < HEIGHT / 20
     i = coord[0]
     j = coord[1]
     dir = [[-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1]]
@@ -34,8 +36,6 @@ def calcular_numeros(coord):
         
 
 
-def ok(i, j):
-    return i >= 0 and j >= 0 and i < WIDTH / 20 and j < HEIGHT / 20
 
 def print_m(m):
     for rows in m:
