@@ -1,4 +1,5 @@
 import pygame as pg, sys, os
+import random
 from field import Field
 
 black = [0, 0, 0]
@@ -10,6 +11,8 @@ blue = [0, 0, 255]
 
 WIDTH = 400
 HEIGHT = 400
+
+N_MINAS = 10
 
 """
 MOUSE BUTTONS
@@ -38,6 +41,8 @@ def main():
     screen.fill(gray)
 
     fields = [[Field(x * 20, y * 20) for y in range(20)] for x in range(20)]
+    gerar_minas(fields)
+    gerar_numeros(fields)
     sprites.add(fields)
 
     while True:
@@ -69,5 +74,34 @@ def main():
 
         pg.display.flip()
         clock.tick(15)
+
+def gerar_minas(grid):
+    count = 0
+    while(count < N_MINAS):
+        x, y = random.randint(0, WIDTH/20 - 1), random.randint(0, HEIGHT/20 - 1)
+        if(grid[x][y].number != -1):
+            grid[x][y].number = -1
+            count += 1
+
+# TODO otimizar a geracao de bomba (ir de bomba a bomba incrementando os quadrados adjacentes)
+def gerar_numeros(grid):
+    # verifica se a cordenada ta fora da matriz de campos
+    def ok(i, j):
+        return i >= 0 and j >= 0 and i < WIDTH / 20 and j < HEIGHT / 20
+    # esse metodod passa quadrado por quadrado procurando uma bomba,
+    # quando acha ele incrementa todos os valores dos quadrados adjacentes
+
+    # direcao dos 8 quadrados adjacentes
+    dir = [[-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1]]
+
+    for i in range(WIDTH//20):
+        for j in range(HEIGHT//20):
+            if(grid[i][j].number == -1): # achou a bomba
+                for dir_i, dir_j in dir:
+                    ii = i + dir_i
+                    jj = j + dir_j
+                    if(ok(ii, jj) and grid[ii][jj].number != -1): # se estiver na matriz e n for uma bomba (n incrementa o numero da bomba)
+                        grid[ii][jj].number += 1
+
 
 if(__name__ == '__main__'): main()

@@ -23,6 +23,13 @@ class Field(pg.sprite.Sprite):
 
         # original state is default
         self.hiden = 0
+
+        # number of the field:
+        # -1 - bomb
+        # 0 - 0 mines arround (no image)
+        # 1 - 1 mine arround(1)
+        # n - n mines arrounds
+        self.number = 0
     
     def change_color(self):
         colors = {
@@ -65,4 +72,9 @@ class Field(pg.sprite.Sprite):
 
         # field now is clicked
         self.hiden = -1
-        self.image = pg.image.load(path + "\\icons\\field_1p.png")
+
+        # reveal true self if its a number (0 included)
+        if(self.number != -1):
+            self.image = pg.image.load(path + "\\icons\\field_1p_" + str(self.number) + ".png")
+        else: # hint: its a bomb!
+            self.image = pg.image.load(path + "\\icons\\bomb_field.png")
