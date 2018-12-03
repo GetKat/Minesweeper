@@ -88,4 +88,5 @@ class Field(pg.sprite.Sprite):
                 self.image = pg.image.load("C:/Users/Carlyle/Desktop/pygame/minesweeper/flag_field.png")
             elif(self.hiden == 2):
                 self.image = pg.image.load("C:/Users/Carlyle/Desktop/pygame/minesweeper/question_field.png")
+
 if(__name__ == '__main__'): main()
