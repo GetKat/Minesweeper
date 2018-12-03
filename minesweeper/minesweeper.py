@@ -1,6 +1,8 @@
 import pygame as pg, sys, os
 import random
+
 from field import Field
+from queue import rayner_queue
 
 black = [0, 0, 0]
 white = [255, 255, 255]
