@@ -32,6 +32,12 @@ class Field(pg.sprite.Sprite):
         self.number = 0
     
     def change_color(self):
+        black = [0, 0, 0]
+        white = [255, 255, 255]
+        gray = [128, 128, 128]
+        red = [255, 0, 0]
+        green = [0, 255, 0]
+        blue = [0, 0, 255]
         colors = {
             0: gray,
             1: red,
