@@ -80,11 +80,17 @@ class MineField:
                 yy = y + dir_y
                 if(ok(xx, yy)):
                     neighbour_mine = self.fields[yy][xx]
-                    if(neighbour_mine.number != Field.BOMB and mina.number == Field.EMPTY and neighbour_mine not in vis):
+                    if(neighbour_mine.number != Field.BOMB and neighbour_mine not in vis and mina.number == Field.EMPTY and mina.hiden != Field.FLAG and mina.hiden != Field.QUESTION):
                         vis.add(neighbour_mine)
-                        q.push(self.fields[yy][xx])
-
-
+                        q.push(neighbour_mine)
+    # revela as bombas e as bandeiras erradas
+    def revelar(self):
+        for field in self.fields:
+            for mine in field:
+                if(mine.number == Field.BOMB):
+                    mine.on_left_click()
+                elif(mine.hiden == Field.FLAG):
+                    mine.set_wrong_flag()
 
     # debugging function
     def print_fields(self):

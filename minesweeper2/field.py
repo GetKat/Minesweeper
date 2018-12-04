@@ -81,6 +81,14 @@ class Field(pg.sprite.Sprite):
         elif(self.hiden == Field.QUESTION): # question_mark state
             self.image = pg.image.load(path + "/icons/question_field_filled.png")
 
+    # caso vc tenha marcado uma bandeira em um lugar q n era bomba
+    def set_wrong_flag(self):
+        self.image = pg.image.load(path + "/icons/bomb_field_wrong.png")
+
+    # caso vc tenha clicka em uma bomba :(
+    def set_bomb_exploded(self):
+        self.image = pg.image.load(path + "/icons/bomb_field_exploded.png")
+
     # when field is left-clicked
     def on_left_click(self):
         # cannot change state if its already clicked
