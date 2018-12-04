@@ -8,6 +8,8 @@ WIDTH = 400
 
 FPS = 15
 
+NUM_MINES = 30
+
 PATH = os.path.dirname(os.path.abspath(__file__))
 
 clock = pg.time.Clock()
@@ -25,13 +27,12 @@ def main():
 
     # configuracao da screen
     screen = pg.display.set_mode([WIDTH, HEIGHT])
-    screen.fill([126, 126, 126]) # fill with gray
     pg.display.set_caption("Campo minado")
     pg.display.set_icon(pg.image.load(PATH + "\\icons\\icon.png"))
 
     # inicializacao do campo_minado
     mine_field = MineField(WIDTH, HEIGHT)
-    mine_field.get_mines(150)
+    mine_field.get_mines(NUM_MINES)
     mine_field.get_numbers()
 
     # inicializao dos sprites
@@ -51,7 +52,8 @@ def main():
                             if(event.button == M_RCLICK):
                                 mina.on_right_click()
                             elif(event.button == M_LCLICK):
-                                mina.on_left_click()
+                                #mina.on_left_click()
+                                mine_field.flood_fill(mina)
         
         sprites.update()
         sprites.draw(screen)

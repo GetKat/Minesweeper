@@ -1,4 +1,5 @@
 from field import Field
+from queue import Queue
 import random
 
 # TODO ver como esconder essa dupla declaracao... sight
@@ -57,6 +58,33 @@ class MineField:
                         yy = y + dir_y
                         if(ok(xx, yy) and self.fields[yy][xx].number != Field.BOMB):
                             self.fields[yy][xx].number += 1
+
+    def flood_fill(self, mina_origem):
+        dir = [[-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1]]
+        def ok(x, y):
+            return x >= 0 and y >= 0 and x < self.width / 20 and y < self.height / 20
+
+        vis = set()
+        vis.add(mina_origem)
+
+        q = Queue()
+        q.push(mina_origem)
+
+        while(not q.empty()):
+            mina = q.front(); q.pop()
+            x = mina.rect.x // 20
+            y = mina.rect.y // 20
+            mina.on_left_click()
+            for dir_x, dir_y in dir:
+                xx = x + dir_x
+                yy = y + dir_y
+                if(ok(xx, yy)):
+                    neighbour_mine = self.fields[yy][xx]
+                    if(neighbour_mine.number != Field.BOMB and mina.number == Field.EMPTY and neighbour_mine not in vis):
+                        vis.add(neighbour_mine)
+                        q.push(self.fields[yy][xx])
+
+
 
     # debugging function
     def print_fields(self):
