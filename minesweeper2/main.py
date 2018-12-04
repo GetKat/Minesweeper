@@ -27,7 +27,7 @@ def main():
     # configuracao da screen
     screen = pg.display.set_mode([WIDTH, HEIGHT])
     pg.display.set_caption("Campo minado")
-    pg.display.set_icon(pg.image.load(PATH + "\\icons\\icon.png"))
+    pg.display.set_icon(pg.image.load(PATH + "/icons/icon.png"))
 
     # inicializacao do campo_minado
     mine_field = MineField(WIDTH, HEIGHT)
