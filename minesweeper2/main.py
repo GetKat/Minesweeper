@@ -3,8 +3,8 @@ import pygame as pg, os, sys
 from field import Field
 from minefield import MineField
 
-HEIGHT = 400
-WIDTH = 600
+HEIGHT = 300
+WIDTH = 400
 
 FPS = 15
 
@@ -31,7 +31,8 @@ def main():
 
     # inicializacao do campo_minado
     mine_field = MineField(WIDTH, HEIGHT)
-    mine_field.get_mines(400)
+    mine_field.get_mines(150)
+    mine_field.get_numbers()
 
     # inicializao dos sprites
     sprites = pg.sprite.Group()

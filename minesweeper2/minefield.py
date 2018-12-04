@@ -30,13 +30,33 @@ class MineField:
         self.width = width
         self.height = height
 
+        self.MAX_MINES = self.width//20 * self.height//20
+
     def get_mines(self, num_mines):
         count = 0
+        if(num_mines > self.MAX_MINES):
+            num_mines = self.MAX_MINES
         while(count < num_mines):
             x, y = random.randint(0, self.width//20 - 1), random.randint(0, self.height//20 - 1)
             if(self.fields[y][x].number != Field.BOMB):
                 self.fields[y][x].number = BOMB
                 count += 1
+
+    def get_numbers(self):
+        dir = [[-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1]]
+        def ok(x, y):
+            return x >= 0 and y >= 0 and x < self.width / 20 and y < self.height / 20
+
+        for fields in self.fields:
+            for field in fields:
+                if(field.number == Field.BOMB):
+                    x = field.rect.x // 20
+                    y = field.rect.y // 20
+                    for dir_x, dir_y in dir:
+                        xx = x + dir_x
+                        yy = y + dir_y
+                        if(ok(xx, yy) and self.fields[yy][xx].number != Field.BOMB):
+                            self.fields[yy][xx].number += 1
 
     # debugging function
     def print_fields(self):
