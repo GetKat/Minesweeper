@@ -20,7 +20,6 @@ M_RCLICK = 3
 
 def main():
     print("path:", PATH)
-
     # init
     pg.init()
     pg.display.init()

@@ -1,5 +1,7 @@
 *.pyc
 *.exe
+*.old
+
 *.spec
 *.zip
 *.txt

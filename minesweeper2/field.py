@@ -2,8 +2,6 @@ import pygame as pg, os
 
 path = os.path.dirname(os.path.abspath(__file__))
 
-
-
 class Field(pg.sprite.Sprite):
     # number state
     BOMB = -1
