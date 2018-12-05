@@ -5,12 +5,12 @@ from minefield import MineField
 
 
 
-HEIGHT = 300
-WIDTH = 400
+HEIGHT = 400
+WIDTH = 300
 
 FPS = 15
 
-NUM_MINES = 30
+NUM_MINES = 2
 MAX_MINAS = (WIDTH // 20) * (HEIGHT // 20)
 
 PATH = os.path.dirname(os.path.abspath(__file__))
@@ -114,12 +114,17 @@ def main():
                                     mina.set_bomb_exploded()
                                 mine_field.flood_fill(mina)
         
-        if(count_actual_flags == NUM_MINES):
+
+        # ver o numero de bandeiras falsas
+        pseudo_flag = count_flags - count_actual_flags
+        if(count_actual_flags == NUM_MINES and pseudo_flag == 0):
             won = True
 
         # ver quando preencher a tela toda toda com bandeira
         if(perdeu):
+            # mostra PERDEU_TEXT na tela
             screen.blit(PERDEU_TEXT, [WIDTH // 2 - PERDEU_TEXT.get_width() // 2, HEIGHT])
+
         elif(won):
             screen.blit(GANHOU_TEXT, [WIDTH // 2 - PERDEU_TEXT.get_width() // 2, HEIGHT])
         else:
