@@ -5,13 +5,14 @@ from minefield import MineField
 
 
 
-HEIGHT = 400
+HEIGHT = 300
 WIDTH = 300
 
 FPS = 15
 
-NUM_MINES = 2
+NUM_MINES = 10
 MAX_MINAS = (WIDTH // 20) * (HEIGHT // 20)
+TOTAL_QUADRADOS = MAX_MINAS
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -53,10 +54,8 @@ def main():
     sprites.add(mine_field.fields)
 
 
-    # contador de bandeiras
-    count_flags = 0
-    # conta as bandeiras q realmente indicam uma bomba
-    count_actual_flags = 0
+    # conta os quadrados revelados
+    count_revealed = 0
 
     perdeu = False
     won = False
@@ -73,8 +72,7 @@ def main():
                     sprites.add(mine_field.fields)
                     mine_field.get_mines(NUM_MINES)
                     mine_field.get_numbers()
-                    count_actual_flags = 0
-                    count_flags = 0
+                    count_revealed = 0
                     perdeu = False
                     won = False
                 if(event.key == pg.K_F1):
@@ -112,22 +110,21 @@ def main():
                                     perdeu = True
                                     mine_field.revelar()
                                     mina.set_bomb_exploded()
-                                mine_field.flood_fill(mina)
-        
-
-        # ver o numero de bandeiras falsas
-        pseudo_flag = count_flags - count_actual_flags
-        if(count_actual_flags == NUM_MINES and pseudo_flag == 0):
+                                count_revealed += mine_field.flood_fill(mina)
+         
+        # so da pra ganhar se liberar todos os quadrados nao-bomba
+        print(TOTAL_QUADRADOS, count_revealed)
+        if(TOTAL_QUADRADOS - count_revealed == NUM_MINES):
             won = True
 
         # ver quando preencher a tela toda toda com bandeira
         if(perdeu):
             # mostra PERDEU_TEXT na tela
             screen.blit(PERDEU_TEXT, [WIDTH // 2 - PERDEU_TEXT.get_width() // 2, HEIGHT])
-
         elif(won):
             screen.blit(GANHOU_TEXT, [WIDTH // 2 - PERDEU_TEXT.get_width() // 2, HEIGHT])
         else:
+            print("jogo em progresso")
             screen.fill([255, 255, 255])
         sprites.update()
         sprites.draw(screen)
