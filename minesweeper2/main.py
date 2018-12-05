@@ -91,18 +91,6 @@ def main():
                             if(event.button == M_RCLICK):
                                 mina.on_right_click()
 
-                                # virou flag
-                                if(mina.hiden == Field.FLAG):
-                                    count_flags += 1
-                                    if(mina.number == Field.BOMB):
-                                        count_actual_flags += 1
-                                # saiu de flag
-                                    # lembrando q se vc clicka em um campo bandeira ele vira interrogacao
-                                elif(mina.hiden == Field.QUESTION):
-                                    count_flags -= 1
-                                    if(mina.number == Field.BOMB):
-                                        count_actual_flags -= 1
-
                             # botao esquerdo
                             elif(event.button == M_LCLICK):
                                 #mina.on_left_click()
