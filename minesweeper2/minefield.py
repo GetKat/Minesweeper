@@ -32,7 +32,7 @@ class MineField:
         self.height = height
 
         self.MAX_MINES = self.width//20 * self.height//20
-
+        
     def get_mines(self, num_mines):
         count = 0
         if(num_mines > self.MAX_MINES):
@@ -83,6 +83,9 @@ class MineField:
                     if(neighbour_mine.number != Field.BOMB and neighbour_mine not in vis and mina.number == Field.EMPTY and mina.hiden != Field.FLAG and mina.hiden != Field.QUESTION):
                         vis.add(neighbour_mine)
                         q.push(neighbour_mine)
+        
+        return vis.__len__()
+
     # revela as bombas e as bandeiras erradas
     def revelar(self):
         for field in self.fields:
