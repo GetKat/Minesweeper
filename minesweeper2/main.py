@@ -77,6 +77,7 @@ def main():
                     won = False
                 if(event.key == pg.K_F9):
                     mine_field.toggle_theme()
+                    mine_field.redraw()
                 if(event.key == pg.K_F1):
                     perdeu = True
             if(perdeu or won):
@@ -102,8 +103,8 @@ def main():
                                     mina.set_bomb_exploded()
                                 count_revealed += mine_field.flood_fill(mina)
          
+        # print(TOTAL_QUADRADOS, count_revealed)
         # so da pra ganhar se liberar todos os quadrados nao-bomba
-        print(TOTAL_QUADRADOS, count_revealed)
         if(TOTAL_QUADRADOS - count_revealed == NUM_MINES):
             won = True
 
@@ -114,7 +115,7 @@ def main():
         elif(won):
             screen.blit(GANHOU_TEXT, [WIDTH // 2 - PERDEU_TEXT.get_width() // 2, HEIGHT])
         else:
-            print("jogo em progresso")
+            # print("jogo em progresso")
             screen.fill([255, 255, 255])
         sprites.update()
         sprites.draw(screen)

@@ -117,4 +117,13 @@ class Field(pg.sprite.Sprite):
             self.image = pg.image.load(path + "/icons/bomb_field.png")
     
     def toggle_theme(self):
-        self.theme = (self.theme + 1) / Field.THEME_LENGHT
+        self.theme = (self.theme + 1) % Field.THEME_LENGHT
+
+    def redraw(self):
+        if(self.number != Field.BOMB):
+            change_theme = False
+            if(self.theme != Field.THEME_DEFAULT):
+                new_theme = "_vaz"
+                change_theme = True
+
+            self.image = pg.image.load(path + "/icons/field_1p_" + str(self.number) + (new_theme if change_theme else "") + ".png")

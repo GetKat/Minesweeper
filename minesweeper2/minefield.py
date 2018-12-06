@@ -101,6 +101,12 @@ class MineField:
                 num = field.number
                 if(num != Field.DEFAULT and num != Field.BOMB):
                     field.toggle_theme()
+    
+    def redraw(self):
+        for fields in self.fields:
+            for field in fields:
+                if(field.hiden == Field.REVEALED and field.number != Field.BOMB and field.number != Field.DEFAULT):
+                    field.redraw()
 
     # debugging function
     def print_fields(self):
