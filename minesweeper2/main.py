@@ -5,12 +5,12 @@ from minefield import MineField
 
 
 
-HEIGHT = 300
-WIDTH = 300
+HEIGHT = 800
+WIDTH = 600
 
 FPS = 15
 
-NUM_MINES = 10
+NUM_MINES = 100
 MAX_MINAS = (WIDTH // 20) * (HEIGHT // 20)
 TOTAL_QUADRADOS = MAX_MINAS
 
@@ -75,6 +75,8 @@ def main():
                     count_revealed = 0
                     perdeu = False
                     won = False
+                if(event.key == pg.K_F9):
+                    mine_field.toggle_theme()
                 if(event.key == pg.K_F1):
                     perdeu = True
             if(perdeu or won):

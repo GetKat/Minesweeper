@@ -95,6 +95,13 @@ class MineField:
                 elif(mine.hiden == Field.FLAG):
                     mine.set_wrong_flag()
 
+    def toggle_theme(self):
+        for fields in self.fields:
+            for field in fields:
+                num = field.number
+                if(num != Field.DEFAULT and num != Field.BOMB):
+                    field.toggle_theme()
+
     # debugging function
     def print_fields(self):
         for v in self.fields:

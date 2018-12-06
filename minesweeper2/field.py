@@ -22,6 +22,12 @@ class Field(pg.sprite.Sprite):
     DEFAULT = 0
     FLAG = 1
     QUESTION = 2
+
+    # themes
+    THEME_DEFAULT = 0
+    THEME_VAZ = 1
+    THEME_LENGHT = 2
+
     def __init__(self, x = 0, y = 0):
         pg.sprite.Sprite.__init__(self)
 
@@ -48,7 +54,8 @@ class Field(pg.sprite.Sprite):
         # n - n mines arrounds
         self.hiden = Field.DEFAULT
         self.number = Field.EMPTY
-    
+
+        self.theme = Field.THEME_DEFAULT
 
 
     def change_color(self):
@@ -100,6 +107,14 @@ class Field(pg.sprite.Sprite):
 
         # reveal true self if its a number (0 included)
         if(self.number != Field.BOMB):
-            self.image = pg.image.load(path + "/icons/field_1p_" + str(self.number) + ".png")
+            change_theme = False
+            if(self.theme != Field.THEME_DEFAULT):
+                new_theme = "_vaz"
+                change_theme = True
+
+            self.image = pg.image.load(path + "/icons/field_1p_" + str(self.number) + (new_theme if change_theme else "") + ".png")
         else: # hint: its a bomb!
             self.image = pg.image.load(path + "/icons/bomb_field.png")
+    
+    def toggle_theme(self):
+        self.theme = (self.theme + 1) / Field.THEME_LENGHT
