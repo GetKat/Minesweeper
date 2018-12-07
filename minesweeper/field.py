@@ -14,8 +14,6 @@ class Field(pg.sprite.Sprite):
     SIX = 6
     SEVEN = 7
     EIGHT = 8
-    NINE = 9
-    TEN = 10
 
     # hiden state
     REVEALED = -1
@@ -37,40 +35,10 @@ class Field(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.color = 0
-        self.x = x
-        self.y = y
-        # hiden state:
-        # -1 - revealed
-        # 0 - default
-        # 1 - flag
-        # 2 - ?
-
-        # original state is default
-
-        # number of the field:
-        # -1 - bomb
-        # 0 - 0 mines arround (no image)
-        # 1 - 1 mine arround(1)
-        # n - n mines arrounds
         self.hiden = Field.DEFAULT
         self.number = Field.EMPTY
-
         self.theme = Field.THEME_DEFAULT
-
-
-    def change_color(self):
-        colors = {
-            0: gray,
-            1: red,
-            2: green,
-            3: blue
-        }
-        self.image.fill(colors[self.color])
-        self.color = (self.color + 1) % 3
-
-    # retorna se o terreno foi revelado ou n
-    def get_hiden(self):
-        return self.hiden != Field.REVEALED
+        self.go_change = False
 
     def on_right_click(self):
         # can only change right_click state if not revealed
@@ -80,13 +48,29 @@ class Field(pg.sprite.Sprite):
         # increment the state so it can loop throgh
         #  default(0) -> flag(1) -> question(2) -> default(0) -> ...
         self.hiden = (self.hiden + 1) % 3
+        self.go_change = True
         
+    def update(self):
+        if(not self.go_change):
+            return
         if(self.hiden == Field.DEFAULT): # default state
             self.image = pg.image.load(path + "/icons/field_3D_filled.png")
         elif(self.hiden == Field.FLAG): # flag state
             self.image = pg.image.load(path + "/icons/flag_field_filled.png")
         elif(self.hiden == Field.QUESTION): # question_mark state
             self.image = pg.image.load(path + "/icons/question_field_filled.png")
+        # reveal true self if its a number (0 included)
+        elif(self.number != Field.BOMB):
+            change_theme = False
+            if(self.theme != Field.THEME_DEFAULT):
+                new_theme = "_vaz"
+                change_theme = True
+
+            self.image = pg.image.load(path + "/icons/field_1p_" + str(self.number) + (new_theme if change_theme else "") + ".png")
+        else: # hint: its a bomb!
+            self.image = pg.image.load(path + "/icons/bomb_field.png")
+        
+        self.go_change = False
 
     # caso vc tenha marcado uma bandeira em um lugar q n era bomba
     def set_wrong_flag(self):
@@ -104,26 +88,8 @@ class Field(pg.sprite.Sprite):
 
         # field now is clicked
         self.hiden = Field.REVEALED
+        self.go_change = True
 
-        # reveal true self if its a number (0 included)
-        if(self.number != Field.BOMB):
-            change_theme = False
-            if(self.theme != Field.THEME_DEFAULT):
-                new_theme = "_vaz"
-                change_theme = True
-
-            self.image = pg.image.load(path + "/icons/field_1p_" + str(self.number) + (new_theme if change_theme else "") + ".png")
-        else: # hint: its a bomb!
-            self.image = pg.image.load(path + "/icons/bomb_field.png")
-    
     def toggle_theme(self):
         self.theme = (self.theme + 1) % Field.THEME_LENGHT
-
-    def redraw(self):
-        if(self.number != Field.BOMB):
-            change_theme = False
-            if(self.theme != Field.THEME_DEFAULT):
-                new_theme = "_vaz"
-                change_theme = True
-
-            self.image = pg.image.load(path + "/icons/field_1p_" + str(self.number) + (new_theme if change_theme else "") + ".png")
+        self.go_change = True

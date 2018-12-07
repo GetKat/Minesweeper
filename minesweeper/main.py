@@ -1,4 +1,6 @@
-import pygame as pg, os, sys
+import pygame as pg
+import os
+import sys
 
 from field import Field
 from minefield import MineField
@@ -8,7 +10,7 @@ from minefield import MineField
 HEIGHT = 800
 WIDTH = 600
 
-FPS = 15
+FPS = 60
 
 NUM_MINES = 100
 MAX_MINAS = (WIDTH // 20) * (HEIGHT // 20)
@@ -77,7 +79,6 @@ def main():
                     won = False
                 if(event.key == pg.K_F9):
                     mine_field.toggle_theme()
-                    mine_field.redraw()
                 if(event.key == pg.K_F1):
                     perdeu = True
             if(perdeu or won):
@@ -86,22 +87,21 @@ def main():
             if(event.type == pg.MOUSEBUTTONDOWN):
                 x, y = event.pos
                 # passa por todas as minas procurando a bomba dentro de x, y
-                for minas in mine_field.fields:
-                    for mina in minas:
-                        if(mina.rect.collidepoint(x, y)):
 
-                            # botao direito
-                            if(event.button == M_RCLICK):
-                                mina.on_right_click()
+                for mina in sprites:
+                    if(mina.rect.collidepoint(x, y)):
+                        # botao direito
+                        if(event.button == M_RCLICK):
+                            mina.on_right_click()
 
-                            # botao esquerdo
-                            elif(event.button == M_LCLICK):
-                                #mina.on_left_click()
-                                if(mina.number == Field.BOMB and mina.hiden == Field.DEFAULT):
-                                    perdeu = True
-                                    mine_field.revelar()
-                                    mina.set_bomb_exploded()
-                                count_revealed += mine_field.flood_fill(mina)
+                        # botao esquerdo
+                        elif(event.button == M_LCLICK):
+                            #mina.on_left_click()
+                            if(mina.number == Field.BOMB and mina.hiden == Field.DEFAULT):
+                                perdeu = True
+                                mine_field.revelar()
+                                mina.set_bomb_exploded()
+                            count_revealed += mine_field.flood_fill(mina)
          
         # print(TOTAL_QUADRADOS, count_revealed)
         # so da pra ganhar se liberar todos os quadrados nao-bomba
@@ -121,8 +121,7 @@ def main():
         sprites.draw(screen)
 
         pg.display.flip()
-        clock.tick(FPS)
-
+        clock.tick(30)
 
 
 if(__name__ == "__main__"): main()
