@@ -44,7 +44,7 @@ class Field(pg.sprite.Sprite):
     VAZ_NUMBER = []
     for i in range(9):
         img = pg.image.load(path + "/icons/field_1p_" + str(i) + "_vaz.png")
-        DEFAULT_NUMBER.append(img)
+        VAZ_NUMBER.append(img)
 
     def __init__(self, x = 0, y = 0):
         pg.sprite.Sprite.__init__(self)

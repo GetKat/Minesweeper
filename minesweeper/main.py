@@ -24,9 +24,10 @@ clock = pg.time.Clock()
 M_LCLICK = 1
 M_RCLICK = 3
 
+FONT_SIZE = 30
 pg.font.init()
-my_font = pg.font.SysFont('Arial', 30)
-PERDEU_TEXT = my_font.render("Tu perdeu", True, [126, 126, 126])
+my_font = pg.font.SysFont('Times new roman', FONT_SIZE)
+PERDEU_TEXT = my_font.render("Tu perdeu", False, [126, 126, 126])
 GANHOU_TEXT = my_font.render("Tu ganhou", True, [126, 126, 126])
 
 def main():
@@ -41,7 +42,7 @@ def main():
     pg.display.init()
 
     # configuracao da screen
-    screen = pg.display.set_mode([WIDTH, HEIGHT + 200])
+    screen = pg.display.set_mode([WIDTH, HEIGHT + FONT_SIZE])
     screen.fill([255, 255, 255])
     pg.display.set_caption("Campo minado")
     pg.display.set_icon(pg.image.load(PATH + "/icons/icon.png"))
@@ -110,7 +111,10 @@ def main():
         # ver quando preencher a tela toda toda com bandeira
         if(perdeu):
             # mostra PERDEU_TEXT na tela
-            screen.blit(PERDEU_TEXT, [WIDTH // 2 - PERDEU_TEXT.get_width() // 2, HEIGHT])
+            text_rect = PERDEU_TEXT.get_rect()
+            text_rect.bottom = HEIGHT + FONT_SIZE
+            text_rect.centerx = WIDTH // 2
+            screen.blit(PERDEU_TEXT, text_rect)
         elif(won):
             screen.blit(GANHOU_TEXT, [WIDTH // 2 - PERDEU_TEXT.get_width() // 2, HEIGHT])
         else:
