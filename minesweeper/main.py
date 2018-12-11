@@ -29,6 +29,9 @@ gray = [128, 128, 128]
 red = [255, 0, 0]
 green = [0, 255, 0]
 blue = [0, 0, 255]
+light_blue = [126, 126, 250]
+orange = [250, 100, 0]
+fire = [250, 160, 10] 
 
 def game(WIDTH, HEIGHT, NUM_MINES):
     # configuracoes das minas
@@ -36,11 +39,11 @@ def game(WIDTH, HEIGHT, NUM_MINES):
     MAX_MINAS = TOTAL_QUADRADOS
 
     # configuracao da fonte
-    FONT_SIZE = 30
+    FONT_SIZE = 32
     pg.font.init()
     my_font = pg.font.SysFont("consolas", FONT_SIZE)
-    PERDEU_TEXT = my_font.render("Tu perdeu", False, [0, 0, 0])
-    GANHOU_TEXT = my_font.render("Tu ganhou", True, [0, 0, 0])
+    PERDEU_TEXT = my_font.render("Tu perdeu", True, black, [100, 170, 255])
+    GANHOU_TEXT = my_font.render("Tu ganhou", True, black, [100, 170, 255])
 
     # funcao q resseta o jogo !!!FEIO PRA CARAMBA!!!
     def reset():
@@ -171,7 +174,7 @@ def game(WIDTH, HEIGHT, NUM_MINES):
         if(perdeu):
             # mostra PERDEU_TEXT na tela
             text_rect = PERDEU_TEXT.get_rect()
-            text_rect.bottom = HEIGHT + FONT_SIZE
+            text_rect.bottom = HEIGHT + FONT_SIZE + 2
             text_rect.centerx = WIDTH // 2
             screen.blit(PERDEU_TEXT, text_rect)
         elif(won):
@@ -203,7 +206,7 @@ def main_menu():
     botoes = pg.sprite.Group()
 
     # config do texto
-    text = my_font.render("Campo Minado", True, black)
+    text = my_font.render("Campo Minado", True, black, light_blue)
     text_rect = text.get_rect()
     text_rect.center = [WIDTH // 2, 50]
 
@@ -217,7 +220,8 @@ def main_menu():
         origin = 100
         # dist - distancia entre um botao e outro
         dist = 50
-        button = Button(WIDTH // 2, origin + dist * i, name)
+        button_font = pg.font.SysFont("DaFont", 28)
+        button = Button(WIDTH // 2, origin + dist * i, name, font = button_font, color = [orange, fire, black])
         botoes.add(button)
 
     on_menu = True
@@ -243,12 +247,14 @@ def main_menu():
                             # dps q acaba o jogo, a janela volta ao tamanho inicial
                             screen = pg.display.set_mode([WIDTH, HEIGHT])
                         elif(button.text == "Config"):
-                            opcoes()
+                            backup = [GAME_WIDTH, GAME_HEIGHT, GAME_NUM_MINES]
+                            opcoes(screen, backup)
+                            GAME_WIDTH, GAME_HEIGHT, GAME_NUM_MINES = backup
                         elif(button.text == "Creditos"):
                             creditos(screen)
 
         # fundo da tela
-        screen.fill(gray)
+        screen.fill(light_blue)
 
         # texto
         screen.blit(text, text_rect)
@@ -300,7 +306,7 @@ def creditos(screen):
 
         screen.fill(black)
         # desenhar a palavra "Creditos" na tela
-        creditos_msg = my_font.render("CREDITOS:", True, red)
+        creditos_msg = my_font.render("CREDITOS:", True, red, black)
         screen.blit(creditos_msg, [0, 0])
 
         # desenhar os creditos na tela
@@ -313,13 +319,85 @@ def creditos(screen):
             screen.blit(name, [0, start + i * 32])
 
         # desenhar "Aperte ESCAPE pra voltar" na tela
-        escape_msg = pg.font.SysFont("DaFont", 20).render("PRESS ESCPAPE TO GO BACK", True, green)
+        escape_msg = pg.font.SysFont("DaFont", 20).render("PRESS ESCPAPE TO GO BACK", True, green, black)
         escape_msg_rect = escape_msg.get_rect()
         escape_msg_rect.right = WIDTH
         escape_msg_rect.bottom = HEIGHT
         screen.blit(escape_msg, escape_msg_rect)
 
         pg.display.flip()
+
+# GAME_CONFIG = [GAME_WIDTH, GAME_HEIGHT, GAME_NUM_MINES]
+def opcoes(screen, GAME_CONFIG):
+    # ajuste da tela
+    screen.fill(light_blue)
+
+    # ajuste da fonte
+    my_font = pg.font.SysFont("consolas", 42)
+
+    # sprites
+    buttons = pg.sprite.Group()
+
+    # titulo
+    titulo = my_font.render("Configuracoes:", True, black, light_blue)
+    
+    # mensagem "numero de bombas"
+    bomb_font = pg.font.SysFont("consolas", 28)
+    msg_bombas = bomb_font.render("numero de bombas:", True, black, light_blue)
+
+    # botoes de aumentar as bombas
+    count_minas = Button(WIDTH // 2, 150, str(GAME_CONFIG[2]), font = my_font, color = [orange, fire, black], res = [70, 40])
+    add = Button(WIDTH // 2 + 80, 150, "+", font = my_font, color = [orange, fire, black], res = [40, 40])
+    sub = Button(WIDTH // 2 - 80, 150, "-", font = my_font, color = [orange, fire, black], res = [40, 40])
+
+    buttons.add(count_minas)
+    buttons.add(add)
+    buttons.add(sub)
+
+    on_config = True
+    while on_config:
+        for event in pg.event.get():
+            if(event.type == pg.QUIT):
+                pg.quit()
+                sys.exit()
+            
+            # tecla escape sai do menu
+            if(event.type == pg.KEYUP):
+                if(event.key == pg.K_ESCAPE):
+                    on_config = False
+
+            if(event.type == pg.MOUSEBUTTONDOWN and event.button == M_LCLICK):
+                x, y = event.pos
+                for button in buttons:
+                    if(button.rect.collidepoint([x, y])):
+                        if(button.text == "+"):
+                            GAME_CONFIG[2] += 1
+                        if(button.text == "-"):
+                            GAME_CONFIG[2] -= 1
+                        count_minas.text = str(GAME_CONFIG[2])
+
+
+            # att
+            screen.fill(light_blue)
+            buttons.update()
+            buttons.draw(screen)
+
+            # titulo
+            titulo_rect = titulo.get_rect()
+            titulo_rect.centerx = WIDTH // 2
+            screen.blit(titulo, titulo_rect)
+
+            # msg das bombas
+            bombas_rect = msg_bombas.get_rect()
+            bombas_rect.centerx = WIDTH // 2
+            bombas_rect.y = 100
+            screen.blit(msg_bombas, bombas_rect)
+
+            pg.display.flip()
+
+
+            ###button = Button(WIDTH // 2, origin + dist * i, name, font = button_font, color = [orange, fire, black])
+
 
 
 def main():
