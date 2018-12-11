@@ -18,6 +18,8 @@ class Button(pg.sprite.Sprite):
         # cor do botao
         self.color = color
 
+        self.id = ""
+
     def update(self):
         x, y = pg.mouse.get_pos()
         sprite_rect = self.rect

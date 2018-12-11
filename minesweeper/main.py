@@ -344,15 +344,34 @@ def opcoes(screen, GAME_CONFIG):
     # mensagem "numero de bombas"
     bomb_font = pg.font.SysFont("consolas", 28)
     msg_bombas = bomb_font.render("numero de bombas:", True, black, light_blue)
+    # mensagem "resolucao"
+    msg_resolucao = bomb_font.render("resolucao: ", True, black, light_blue)
 
     # botoes de aumentar as bombas
     count_minas = Button(WIDTH // 2, 150, str(GAME_CONFIG[2]), font = my_font, color = [orange, fire, black], res = [70, 40])
     add = Button(WIDTH // 2 + 80, 150, "+", font = my_font, color = [orange, fire, black], res = [40, 40])
     sub = Button(WIDTH // 2 - 80, 150, "-", font = my_font, color = [orange, fire, black], res = [40, 40])
 
-    buttons.add(count_minas)
-    buttons.add(add)
-    buttons.add(sub)
+    # botao de aumentar a resolucao
+    width_button = Button(WIDTH // 4, 250, str(GAME_CONFIG[0]), font = my_font, color = [orange, fire, black], res = [100, 40])
+    add_width = Button(WIDTH // 4 + 75, 250, "+", font = my_font, color = [orange, fire, black], res = [40, 40])
+    add_width.id = "addw"
+    sub_width = Button(WIDTH // 4 - 75, 250, "-", font = my_font, color = [orange, fire, black], res = [40, 40])
+    sub_width.id = "subw"
+
+    height_button = Button(3 * WIDTH // 4, 250, str(GAME_CONFIG[0]), font = my_font, color = [orange, fire, black], res = [100, 40])
+    add_height = Button(3 * WIDTH // 4 + 75, 250, "+", font = my_font, color = [orange, fire, black], res = [40, 40])
+    add_height.id = "addh"
+    sub_height = Button(3 * WIDTH // 4 - 75, 250, "-", font = my_font, color = [orange, fire, black], res = [40, 40])
+    sub_height.id = "subh"
+
+    # botao voltar ao menu
+    voltar = Button(WIDTH // 2, HEIGHT - 50, "voltar", font = my_font, color = [orange, fire, black], res = [200, 40])
+
+    buttons.add(count_minas, add, sub)
+    buttons.add(width_button, add_width, sub_width)
+    buttons.add(add_height, sub_height, height_button)
+    buttons.add(voltar)
 
     on_config = True
     while on_config:
@@ -370,11 +389,24 @@ def opcoes(screen, GAME_CONFIG):
                 x, y = event.pos
                 for button in buttons:
                     if(button.rect.collidepoint([x, y])):
-                        if(button.text == "+"):
+                        if(button.id == "addw"):
+                            GAME_CONFIG[0] += 20
+                        elif(button.id == "subw"):
+                            GAME_CONFIG[0] -= 20
+                        elif(button.id == "addh"):
+                            GAME_CONFIG[1] += 20
+                        elif(button.id == "subh"):
+                            GAME_CONFIG[1] -= 20
+                        elif(button.text == "+"):
                             GAME_CONFIG[2] += 1
-                        if(button.text == "-"):
+                        elif(button.text == "-"):
                             GAME_CONFIG[2] -= 1
+                        elif(button.text == "voltar"):
+                            on_config = False
+
                         count_minas.text = str(GAME_CONFIG[2])
+                        height_button.text = str(GAME_CONFIG[1])
+                        width_button.text = str(GAME_CONFIG[0])
 
 
             # att
@@ -392,6 +424,11 @@ def opcoes(screen, GAME_CONFIG):
             bombas_rect.centerx = WIDTH // 2
             bombas_rect.y = 100
             screen.blit(msg_bombas, bombas_rect)
+            # msg da resolucao
+            resolucao_rect = msg_resolucao.get_rect()
+            resolucao_rect.centerx = WIDTH // 2
+            resolucao_rect.y = 200
+            screen.blit(msg_resolucao, resolucao_rect)
 
             pg.display.flip()
 
