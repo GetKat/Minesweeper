@@ -4,43 +4,40 @@ import sys
 
 from field import Field
 from minefield import MineField
-from button import Button
 
 # path para a pasta onde o programa esta rodando... n sei como funciona, pesquisar no stack overflow
 PATH = os.path.dirname(os.path.abspath(__file__))
+
+# configuracao da janela
+HEIGHT = 800
+WIDTH = 400
 
 # fps duh...
 FPS = 60
 # clock usado pra controlar o FPS
 clock = pg.time.Clock()
 
+# configuracoes das minas
+
 # constantes que representam botoes do mouse
 M_LCLICK = 1 # mouse left click
 M_RCLICK = 3 # mouse right click
 
-# cores
-black = [0, 0, 0]
-white = [255, 255, 255]
-gray = [128, 128, 128]
-red = [255, 0, 0]
-green = [0, 255, 0]
-blue = [0, 0, 255]
+# configuracao da fonte
+FONT_SIZE = 30
+pg.font.init()
+my_font = pg.font.SysFont("consolas", FONT_SIZE)
+PERDEU_TEXT = my_font.render("Tu perdeu", False, [0, 0, 0])
+GANHOU_TEXT = my_font.render("Tu ganhou", True, [0, 0, 0])
+
 
 def game(WIDTH, HEIGHT, NUM_MINES):
-    # configuracoes das minas
+    NUM_MINES = 3
     TOTAL_QUADRADOS = (WIDTH // 20) * (HEIGHT // 20)
     MAX_MINAS = TOTAL_QUADRADOS
-
-    # configuracao da fonte
-    FONT_SIZE = 30
-    pg.font.init()
-    my_font = pg.font.SysFont("consolas", FONT_SIZE)
-    PERDEU_TEXT = my_font.render("Tu perdeu", False, [0, 0, 0])
-    GANHOU_TEXT = my_font.render("Tu ganhou", True, [0, 0, 0])
-
     # funcao q resseta o jogo !!!FEIO PRA CARAMBA!!!
     def reset():
-        nonlocal perdeu, won, mine_field, count_flags, count_revealed
+        nonlocal perdeu, won, first_click, mine_field, count_flags, count_revealed
         mine_field = MineField(WIDTH, HEIGHT, NUM_MINES)
         sprites.empty()
         sprites.add(mine_field.fields)
@@ -176,89 +173,3 @@ def game(WIDTH, HEIGHT, NUM_MINES):
 
         pg.display.flip()
         clock.tick(FPS)
-
-def main_menu():
-    # configuracao da janela
-    HEIGHT = 400
-    WIDTH = 400
-
-    # configuracoes do jogo
-    GAME_WIDTH = 300
-    GAME_HEIGHT = 300
-    GAME_NUM_MINES = 30
-
-    # fonte
-    pg.font.init()
-    my_font = pg.font.SysFont("DaFont", 48)
-
-    # init
-    pg.display.init()
-    pg.init()
-    screen = pg.display.set_mode([WIDTH, HEIGHT])
-
-    # sprites
-    botoes = pg.sprite.Group()
-
-    # config do texto
-    text = my_font.render("Menu Principal", True, black)
-    text_rect = text.get_rect()
-    text_rect.center = [WIDTH // 2, 50]
-
-    # config da tela
-    pg.display.set_caption("Menu Principal")
-
-    # botoes
-    names = ["Start", "Options", "Credits", "Exit"]
-    for i, name in enumerate(names):
-        # origin - posicao vertical (eixo y) do primeiro botao
-        origin = 100
-        # dist - distancia entre um botao e outro
-        dist = 50
-        button = Button(WIDTH // 2, origin + dist * i, name)
-        botoes.add(button)
-
-    on_menu = True
-    while on_menu:
-        for event in pg.event.get():
-            if(event.type == pg.QUIT):
-                pg.quit()
-                sys.exit()
-
-            # ver se clickou
-            if(event.type == pg.MOUSEBUTTONUP):
-                x, y = event.pos
-                # ver em qual botao clickou
-                for button in botoes:
-                    if(button.rect.collidepoint([x, y])):
-                        # ver oq fazer dependendo do botao clickado
-                        if(button.text == "Exit"):
-                            pg.quit()
-                            sys.exit()
-                        elif(button.text == "Start"):
-                            # comeca o jogo
-                            game(GAME_WIDTH, GAME_HEIGHT, GAME_NUM_MINES)
-                        elif(button.text == "Options"):
-                            opcoes()
-                        elif(button.text == "Credits"):
-                            creditos()
-
-        # fundo da tela
-        screen.fill(gray)
-
-        # texto
-        screen.blit(text, text_rect)
-
-        # desenhando
-        botoes.update()
-        botoes.draw(screen)        
-
-        # atualiza a tela
-        pg.display.flip()
-
-    # dps de ter saido do loop principal, limpa os sprites dos botoes
-    botoes.empty()
-
-def main():
-    main_menu()
-
-if(__name__ == "__main__"): main()
