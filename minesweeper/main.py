@@ -9,6 +9,10 @@ from button import Button
 # path para a pasta onde o programa esta rodando... n sei como funciona, pesquisar no stack overflow
 PATH = os.path.dirname(os.path.abspath(__file__))
 
+ # configuracao da janela
+HEIGHT = 400
+WIDTH = 400
+
 # fps duh...
 FPS = 60
 # clock usado pra controlar o FPS
@@ -87,6 +91,9 @@ def game(WIDTH, HEIGHT, NUM_MINES):
             if(event.type == pg.QUIT):
                 pg.quit()
                 sys.exit()
+            # voltar ao menu principal
+            if(event.type == pg.KEYUP and event.key == pg.K_ESCAPE):
+                return
             if(event.type == pg.KEYDOWN):
                 # ressetar o jogo
                 if(event.key == pg.K_F2):
@@ -178,10 +185,6 @@ def game(WIDTH, HEIGHT, NUM_MINES):
         clock.tick(FPS)
 
 def main_menu():
-    # configuracao da janela
-    HEIGHT = 400
-    WIDTH = 400
-
     # configuracoes do jogo
     GAME_WIDTH = 300
     GAME_HEIGHT = 300
@@ -200,7 +203,7 @@ def main_menu():
     botoes = pg.sprite.Group()
 
     # config do texto
-    text = my_font.render("Menu Principal", True, black)
+    text = my_font.render("Campo Minado", True, black)
     text_rect = text.get_rect()
     text_rect.center = [WIDTH // 2, 50]
 
@@ -208,7 +211,7 @@ def main_menu():
     pg.display.set_caption("Menu Principal")
 
     # botoes
-    names = ["Start", "Options", "Credits", "Exit"]
+    names = ["Jogar", "Config", "Creditos", "Sair"]
     for i, name in enumerate(names):
         # origin - posicao vertical (eixo y) do primeiro botao
         origin = 100
@@ -231,16 +234,18 @@ def main_menu():
                 for button in botoes:
                     if(button.rect.collidepoint([x, y])):
                         # ver oq fazer dependendo do botao clickado
-                        if(button.text == "Exit"):
+                        if(button.text == "Sair"):
                             pg.quit()
                             sys.exit()
-                        elif(button.text == "Start"):
+                        elif(button.text == "Jogar"):
                             # comeca o jogo
                             game(GAME_WIDTH, GAME_HEIGHT, GAME_NUM_MINES)
-                        elif(button.text == "Options"):
+                            # dps q acaba o jogo, a janela volta ao tamanho inicial
+                            screen = pg.display.set_mode([WIDTH, HEIGHT])
+                        elif(button.text == "Config"):
                             opcoes()
-                        elif(button.text == "Credits"):
-                            creditos()
+                        elif(button.text == "Creditos"):
+                            creditos(screen)
 
         # fundo da tela
         screen.fill(gray)
@@ -257,6 +262,65 @@ def main_menu():
 
     # dps de ter saido do loop principal, limpa os sprites dos botoes
     botoes.empty()
+
+def creditos(screen):
+    # ajuste da tela
+    screen.fill(black)
+
+    # ajuste da fonte
+    my_font = pg.font.SysFont("DaFont", 28)
+
+    # cada nome em uma string, ler linha por linha do arquivo
+    strings = []
+    with open("credits.bin", "r") as file:
+        string = file.readline()
+        while string:
+            # strip() remove os espaco em branco no inicio e final da string
+            string = string.strip()
+            strings.append(string)
+            string = file.readline()
+
+    # array de textos (surface object do pygame)
+    texts = []
+    for string in strings:
+        text = my_font.render(string, True, white)
+        texts.append(text)
+
+    # loop da cena de creditos (sair ao apertar ESCAPE)
+    on_credits = True
+    while on_credits:
+        for event in pg.event.get():
+            if(event.type == pg.QUIT):
+                pg.quit()
+                sys.exit()
+            # apertou a tecla escape
+            if(event.type == pg.KEYUP):
+                if(event.key == pg.K_ESCAPE):
+                    on_credits = False
+
+        screen.fill(black)
+        # desenhar a palavra "Creditos" na tela
+        creditos_msg = my_font.render("CREDITOS:", True, red)
+        screen.blit(creditos_msg, [0, 0])
+
+        # desenhar os creditos na tela
+        y_distance = 32
+        # y_distance - distancia entre cada linha (tamanho da fonte)
+        for i, name in enumerate(texts):
+            # name - text object
+            start = 50
+            # start - altura onde os nomes vao comecar a ser mostrados
+            screen.blit(name, [0, start + i * 32])
+
+        # desenhar "Aperte ESCAPE pra voltar" na tela
+        escape_msg = pg.font.SysFont("DaFont", 20).render("PRESS ESCPAPE TO GO BACK", True, green)
+        escape_msg_rect = escape_msg.get_rect()
+        escape_msg_rect.right = WIDTH
+        escape_msg_rect.bottom = HEIGHT
+        screen.blit(escape_msg, escape_msg_rect)
+
+        pg.display.flip()
+
 
 def main():
     main_menu()
