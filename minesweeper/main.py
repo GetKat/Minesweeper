@@ -69,7 +69,7 @@ def main():
             if(event.type == pg.KEYDOWN):
                 if(event.key == pg.K_F2):
                     # def reset()
-                    sprites.remove(mine_field.fields)
+                    sprites.empty()
                     mine_field = MineField(WIDTH, HEIGHT)
                     sprites.add(mine_field.fields)
                     mine_field.get_mines(NUM_MINES)
@@ -81,10 +81,8 @@ def main():
                     mine_field.toggle_theme()
                 if(event.key == pg.K_F1):
                     perdeu = True
-            if(perdeu or won):
-                continue
             # quando clicka num quadrado
-            if(event.type == pg.MOUSEBUTTONDOWN):
+            if(event.type == pg.MOUSEBUTTONDOWN and not perdeu and not won):
                 x, y = event.pos
                 # passa por todas as minas procurando a bomba dentro de x, y
 
@@ -101,7 +99,8 @@ def main():
                                 perdeu = True
                                 mine_field.revelar()
                                 mina.set_bomb_exploded()
-                            count_revealed += mine_field.flood_fill(mina)
+                            else:
+                                count_revealed += mine_field.flood_fill(mina)
          
         # print(TOTAL_QUADRADOS, count_revealed)
         # so da pra ganhar se liberar todos os quadrados nao-bomba

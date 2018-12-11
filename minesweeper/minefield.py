@@ -90,8 +90,10 @@ class MineField:
     def revelar(self):
         for field in self.fields:
             for mine in field:
+                # se for bomba
                 if(mine.number == Field.BOMB):
                     mine.on_left_click()
+                # se nao for bomba E tiver uma bandeira
                 elif(mine.hiden == Field.FLAG):
                     mine.set_wrong_flag()
 
