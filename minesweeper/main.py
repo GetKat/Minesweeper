@@ -59,6 +59,10 @@ def main():
 
     # conta os quadrados revelados
     count_revealed = 0
+    # conta o numero de minas q faltam (especulando)
+    counter = 0
+    # conta o numero de bandeiras colocadas pelo usuario
+    count_flags = 0
 
     perdeu = False
     won = False
@@ -92,6 +96,12 @@ def main():
                         # botao direito
                         if(event.button == M_RCLICK):
                             mina.on_right_click()
+                            # dps de ter clickado virou uma flag, aumenta o num de flags
+                            if(mina.hiden == Field.FLAG):
+                                count_flags += 1
+                            # se dps de ter clickado virou um "?" significa q era flag, diminiu o numero de flags
+                            if(mina.hiden == Field.QUESTION):
+                                count_flags -= 1
 
                         # botao esquerdo
                         elif(event.button == M_LCLICK):
@@ -102,11 +112,20 @@ def main():
                                 mina.set_bomb_exploded()
                             else:
                                 count_revealed += mine_field.flood_fill(mina)
-         
-        # print(TOTAL_QUADRADOS, count_revealed)
+        screen.fill([255, 255, 255]) 
+        
         # so da pra ganhar se liberar todos os quadrados nao-bomba
         if(TOTAL_QUADRADOS - count_revealed == NUM_MINES):
             won = True
+
+        # mostra a quantidade de minas q faltam (especulacao atravez das bandeiras)
+        counter = NUM_MINES - count_flags
+        text_count = my_font.render(str(counter), True, [200, 0, 0])
+        text_rect = text_count.get_rect()
+        text_rect.bottom = HEIGHT + FONT_SIZE
+        text_rect.right = WIDTH
+        screen.blit(text_count, text_rect)
+
 
         # ver quando preencher a tela toda toda com bandeira
         if(perdeu):
@@ -117,9 +136,6 @@ def main():
             screen.blit(PERDEU_TEXT, text_rect)
         elif(won):
             screen.blit(GANHOU_TEXT, [WIDTH // 2 - PERDEU_TEXT.get_width() // 2, HEIGHT])
-        else:
-            # print("jogo em progresso")
-            screen.fill([255, 255, 255])
         sprites.update()
         sprites.draw(screen)
 
