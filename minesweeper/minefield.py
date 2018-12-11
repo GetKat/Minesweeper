@@ -25,13 +25,15 @@ FLAG = 1
 QUESTION = 2
 
 class MineField:
-    def __init__(self, width, height):
+    def __init__(self, width, height, num_mines):
         print("construindo com:", width, height)
         self.fields = [[Field(x, y) for x in range(0, width, 20)] for y in range(0, height, 20)]
         self.width = width
         self.height = height
 
         self.MAX_MINES = self.width//20 * self.height//20
+        self.get_mines(num_mines)
+        self.get_numbers()
         
     def get_mines(self, num_mines):
         count = 0
@@ -83,8 +85,6 @@ class MineField:
                     if(neighbour_mine.number != Field.BOMB and neighbour_mine not in vis and mina.number == Field.EMPTY and mina.hiden != Field.FLAG and mina.hiden != Field.QUESTION):
                         vis.add(neighbour_mine)
                         q.push(neighbour_mine)
-        
-        return vis.__len__()
 
     # revela as bombas e as bandeiras erradas
     def revelar(self):
@@ -103,17 +103,3 @@ class MineField:
                 num = field.number
                 if(num != Field.DEFAULT and num != Field.BOMB):
                     field.toggle_theme()
-    
-    def redraw(self):
-        for fields in self.fields:
-            for field in fields:
-                if(field.hiden == Field.REVEALED and field.number != Field.BOMB and field.number != Field.DEFAULT):
-                    field.redraw()
-
-    # debugging function
-    def print_fields(self):
-        for v in self.fields:
-            print("[ ", end = '')
-            for field in v:
-                print("(" + str(field.x) + ", " + str(field.y) + ")", end = ' ')
-            print("]")
