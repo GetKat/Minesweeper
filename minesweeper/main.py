@@ -278,7 +278,7 @@ def creditos(screen):
 
     # cada nome em uma string, ler linha por linha do arquivo
     strings = []
-    with open("credits.bin", "r") as file:
+    with open(PATH + "/credits.bin", "r") as file:
         string = file.readline()
         while string:
             # strip() remove os espaco em branco no inicio e final da string
@@ -348,18 +348,18 @@ def opcoes(screen, GAME_CONFIG):
     msg_resolucao = bomb_font.render("resolucao: ", True, black, light_blue)
 
     # botoes de aumentar as bombas
-    count_minas = Button(WIDTH // 2, 150, str(GAME_CONFIG[2]), font = my_font, color = [orange, fire, black], res = [70, 40])
+    count_minas = Button(WIDTH // 2, 150, str(GAME_CONFIG[2]), font = my_font, color = [orange, fire, black], res = [70, 40], reactive = False)
     add = Button(WIDTH // 2 + 80, 150, "+", font = my_font, color = [orange, fire, black], res = [40, 40])
     sub = Button(WIDTH // 2 - 80, 150, "-", font = my_font, color = [orange, fire, black], res = [40, 40])
 
     # botao de aumentar a resolucao
-    width_button = Button(WIDTH // 4, 250, str(GAME_CONFIG[0]), font = my_font, color = [orange, fire, black], res = [100, 40])
+    width_button = Button(WIDTH // 4, 250, str(GAME_CONFIG[0] // 20), font = my_font, color = [orange, fire, black], res = [100, 40], reactive = False)
     add_width = Button(WIDTH // 4 + 75, 250, "+", font = my_font, color = [orange, fire, black], res = [40, 40])
     add_width.id = "addw"
     sub_width = Button(WIDTH // 4 - 75, 250, "-", font = my_font, color = [orange, fire, black], res = [40, 40])
     sub_width.id = "subw"
 
-    height_button = Button(3 * WIDTH // 4, 250, str(GAME_CONFIG[0]), font = my_font, color = [orange, fire, black], res = [100, 40])
+    height_button = Button(3 * WIDTH // 4, 250, str(GAME_CONFIG[1] // 20), font = my_font, color = [orange, fire, black], res = [100, 40], reactive = False)
     add_height = Button(3 * WIDTH // 4 + 75, 250, "+", font = my_font, color = [orange, fire, black], res = [40, 40])
     add_height.id = "addh"
     sub_height = Button(3 * WIDTH // 4 - 75, 250, "-", font = my_font, color = [orange, fire, black], res = [40, 40])
@@ -405,8 +405,8 @@ def opcoes(screen, GAME_CONFIG):
                             on_config = False
 
                         count_minas.text = str(GAME_CONFIG[2])
-                        height_button.text = str(GAME_CONFIG[1])
-                        width_button.text = str(GAME_CONFIG[0])
+                        height_button.text = str(GAME_CONFIG[1] // 20)
+                        width_button.text = str(GAME_CONFIG[0] // 20)
 
 
             # att

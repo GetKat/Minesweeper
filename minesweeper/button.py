@@ -24,15 +24,15 @@ class Button(pg.sprite.Sprite):
         x, y = pg.mouse.get_pos()
         sprite_rect = self.rect
 
+        self.image.fill(self.color[0])
+        text = self.font.render(self.text, True, self.color[2], self.color[0])
+
         # cores do botao
         if(self.reactive):
             mouse_over = sprite_rect.collidepoint([x, y])
             if(mouse_over):
                 self.image.fill(self.color[1])
                 text = self.font.render(self.text, True, self.color[2], self.color[1])
-            else:
-                self.image.fill(self.color[0])
-                text = self.font.render(self.text, True, self.color[2], self.color[0])
         # botar o texto
             # pegar o texto
         
